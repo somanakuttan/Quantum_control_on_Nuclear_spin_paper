@@ -1,0 +1,195 @@
+\documentclass[aps,prl,twocolumn,reprint,superscriptaddress,footinbib]{revtex4-2}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage{xcolor}   
+\usepackage{bm}        
+\usepackage{amssymb}   % for math
+\usepackage{physics}
+\usepackage{tikz}
+\usepackage{gensymb}
+\usepackage{subfigure}
+\usepackage[colorlinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{cleveref}
+\usepackage{dsfont}
+\usepackage{mathtools}
+ \usepackage{amsthm}
+%\usepackage{kantlipsum} % just to provide mock text
+
+\usepackage[normalem]{ulem}
+\newcommand{\mjm}[1]{\textcolor{purple}{#1}}
+\newcommand{\mjms}[1]{\textcolor{purple}{\sout{#1}}}
+\newcommand{\mjmc}[1]{\textcolor{purple}{\MakeUppercase{#1}}}
+
+\makeatletter
+\DeclareRobustCommand{\element}[1]{\@element#1\@nil}
+\def\@element#1#2\@nil{%
+  #1%
+  \if\relax#2\relax\else\MakeLowercase{#2}\fi}
+\pdfstringdefDisableCommands{\let\element\@firstofone}
+\makeatother
+ 
+
+\begin{document}
+% The following information is for internal review, please remove them for submission
+\widetext
+
+
+\title{Quantum Optimal Control of Nuclear Spin Qudecimals in \textsuperscript{87}Sr}
+      % D0 authors (remove the first 3 lines
+                             % of this file prior to submission, they
+                             % contain a time stamp for the authorlist)
+                             % (includes institutions and visitors)
+
+\author{Sivaprasad Omanakuttan}
+\email[]{somanakuttan@unm.edu}
+\author{Anupam Mitra}
+\affiliation{Center for Quantum Information and Control (CQuIC), Department of Physics and Astronomy, University of New Mexico, Albuquerque, New Mexico 87131, USA}
+\author{Michael J. Martin }
+\affiliation{Materials Physics and Applications Division, Los Alamos National Laboratory, Los Alamos, New Mexico 87544}
+\affiliation{Center for Quantum Information and Control (CQuIC), Department of Physics and Astronomy, University of New Mexico, Albuquerque, New Mexico 87131, USA}
+\author{Ivan H Deutsch}
+\email[]{ideutsch@unm.edu}
+\affiliation{Center for Quantum Information and Control (CQuIC), Department of Physics and Astronomy, University of New Mexico, Albuquerque, New Mexico 87131, USA}
+
+
+
+\date{\today}
+\begin{abstract}
+We study the ability to implement unitary maps on states of the $I=9/2$ nuclear spin in \textsuperscript{87}Sr, a $d=10$  dimensional (qudecimal) Hilbert space, using quantum optimal control. Through a combination of nuclear spin-resonance and a tensor AC-Stark shift, by solely modulating the phase of a radio-frequency magnetic field, the system is quantum controllable.  Alkaline earth atoms, such as \textsuperscript{87}Sr, have a very favorable figure-of-merit for such control due to  narrow  intercombination lines and the large hyperfine splitting in the excited states. We numerically study the quantum speed-limit, optimal parameters, and the fidelity of arbitrary state preparation and full SU(10) maps, including the presence of decoherence due to optical pumping induced by the light-shifting laser. We also study the use of robust control to mitigate some dephasing due to inhomogenieties  in the light shift.  We find that with an  rf-Rabi frequency of $\Omega_\text{rf}$ and 0.5\% inhomogeneity  in the the light shift we can prepare an arbitrary Haar-random state in a time  $T={4.5}\pi/\Omega_\text{rf}$  with average fidelity $\langle \mathcal{F}_\psi \rangle =0.9992$, and an arbitrary Haar-random SU(10) map in a time $T=24\pi/\Omega_\text{rf}$ with average fidelity $\langle \mathcal{F}_U \rangle = 0.9923$.
+
+ \end{abstract}
+\maketitle
+
+Ultracold ensembles of alkaline-earth atoms trapped in optical lattices or arrays of optical tweezers are a powerful platform for quantum information processing (QIP), including atomic clocks and sensors~\cite{Ludlow2015, campbell2017fermi, norcia2019seconds, covey20192000, young2020half}, simulators of many-body physics~\cite{gorshkov2010two, daley2011quantum, mukherjee2011many,banerjee2013atomic,isaev2016spin, kolkowitz2017spin}, and general purpose quantum computers~\cite{madjarov2020high,daley2011quantum,hayes2007quantum}.  The ability to optically manipulate coherence in single-atoms  via ultranarrow optical resonances on the intercombination lines, together with the ability to create high-fidelity entangling interactions between atoms when they are excited to high-lying Rydberg states~\cite{Saffman2010,Saffman_2016,Browaeys_2016} provides tools that makes this system highly controllable for such applications.  In addition, fermionic species have nuclear spin. As the ground state is a closed shell, there is no electron angular momentum, and the nuclear spin with its weak magnetic moment is highly isolated from the environment.  Such nuclear spins in alkaline-earth atoms are thus natural carriers of quantum information given their long coherence times and our ability to coherently control them with magnetic and optical  fields.  Nuclear spins are also seen as excellent carriers of quantum information in the solid state as demonstrated in pioneering experiments including in NV-centers~\cite{morishita2020} and dopants in silicon~\cite{soltamov2019,morello2018quantum,Godfrin2017,Leuenberger2003}.  
+
+Using magneto-optical fields,~\cite{Lester2021} recently demonstrated the control of qubits encoded in  two nuclear-spin magnetic sublevels levels in  \textsuperscript{87}Sr. The nuclear spin in this atomic species, however, it is not a two-level system; the spin is $I=9/2$ and there are $d=2I+1=10$ nuclear magnetic sublevels.  Such qudits,  here  ``qudecimals," have potential advantage for QIP.  First and foremost, one can encode a $D=d^{n_d}=2^{n_2}$ dimensional Hilbert space associated with $n_2$ qubits in $n_d=n_2/\log_2 d$ qudits.  While only a logarithmic saving, this is meaningful for the qudecimal ($\log_2 d= 3.32$), especially when trapping and control of each atom is at a premium. This savings extends to algorithmic efficiency, in that the number of elementary two-qudit gates necessary to implement a  general unitary map scales as $O(n_d^2 D^2) = O\left( \frac{n_2^2 D^2}{(\log_2 d)^2} \right)$~\cite{muthukrishnan2000multivalued}.  Moreover, qudit architectures can show increased resilience to noise~\cite{cozzolino2019high} and additional routes to quantum error correction~\cite{gottesman1998fault}. For example, one can protect against dephasing errors by encoding a qubit in a nuclear spin qudit~\cite{Li2017}.  In addition, fault-tolerant operation of a quantum computer may be more favorable based on qudit vs. qubit codes~\cite{PhysRevA.83.032310,campbell2014}.
+
+While QIP with qudits has great potential, there are substantial hurdles.  State preparation and readout are more challenging for systems with $d>2$.  Moreover, quantum logic with qudits is more complex.  Universal quantum logic with qubits can be achieved with a set of logic gates that include the unitary-generators of SU(2) on each qubit, plus one entangling gate between qubits pairwise.  In the case of qudits, in addition to the entangling gate, we require unitary-generators of SU($d$) for each subsystem~\cite{muthukrishnan2000multivalued,zhou2003quantum,brennen2005criteria,luo2014universal}. Unlike qubits, the Lie algebra of such gates are not spanned by the native Hamiltonians, and thus implementation of this generating set is not straightforward.  Different approaches have been studied to implement SU($d$) gates~\cite{Moreno2018,neeley2009emulation,Low2020,sawant2020,moro2019}. One approach is to specify an arbitrary SU($d$) unitary matrix through a sequence of so-called Givens rotations acting between pairs of levels~\cite{O'Leary2006}.   In a landmark experiment, the Innsbruck group employed this construction to experimentally demonstrate universal quantum logic with qudits in a trapped ions ion~\cite{ringbauer2021universal}, with performance similar to qubit quantum processors.
+
+An alternative powerful approach to implementing universal quantum logic is to employ the tools of quantum optimal control . In this paradigm, one numerically searches for a time-dependent waveform that achieves the desired SU($d$) unitary map when one has access to a Hamiltonian that makes the system universally ``controllable"~\cite{Merkel2009,jurdjevic1972control,goerz2015optimizing, koch2016controlling,Frey2020,brockett1973lie,schirmer2002degrees}.  Optimal control is a powerful and flexible approach that does not require specific pairwise Givens rotations, can be high-fidelity, and can be made robust to imperfections such as inhomogenieties through the tools of robust control~\cite{anderson2015accurate, goerz2015optimizing, glaser2015training, koch2016controlling}. In seminal work, the Jessen group used optimal control to demonstrate high-fidelity control of qudits encoded in the hyperfine spin levels of ground-state cesium~\cite{Chaudhury2007, Smith2013}.  This flexible control has found potential application in studies of quantum simulation~\cite{Poggi2020}. 
+
+%Encoding qudits in the electronic ground state of cold  atoms has been explored for species with alkali atoms (neutral~\cite{Chaudhury2007}  and ionic~\cite{Low2020,Klimov2003}). In this case the hyperfine splitting provides additional tools for control based on microwave couplings.
+%or two-photon Raman couplings, through which one can implement desired Givens rotations on a subspace that is least sensitive to magnetic field noise~\cite{Low2020}.  In addition, the combination of microwave and radio-frequency control, makes this system controllable~\cite{Merkel2008}.  
+
+In this paper we build on this approach to study implementation of SU(10) gates on the nuclear spin of $^{87}$Sr-based on quantum optimal control. A nuclear-spin encoding may have long-term advantages compared to hyperfine states that couple electron and nuclear spins, in its strongly reduced sensitivity to to background magnetic fields and resilience against decoherence driven by photon scattering from optical tweezers or lattices ~\cite{hayes2007quantum, dorscher2018lattice}.  Weak coupling to the environment, of course, comes with increased challenges of weak coupling to control fields.  We will show, nonetheless, that with reasonable experimental parameters one can implement high-fidelity qudecimal logic, with low decoherence.
+
+We consider open loop-control in a Hilbert space with finite dimension $d$, governed by a Hamiltonian $H[\mathbf{c}(t)] = H_0 + \sum_\lambda c_\lambda(t) H_\lambda$ where $\mathbf{c}(t)=\{c_\lambda(t)\}$ is the set of time-dependent classical control waveforms. The system is said to ``controllable" if the set of Hamiltonians, $\{H_0, H_\lambda\}$, are generators of the Lie algebra SU($d$).  Then $\exists \hspace{0.1cm} \mathbf{c}(t)$ \hspace{0.2cm } such that $U[\mathbf{c},T]=\mathcal{T}\left[\exp\left(-i\int_0^T H[\mathbf{c}(t)]dt\right)\right]=U_{\mathrm{tar} }$ for any target unitary matrix $U_{\mathrm{tar} }=\mathrm{SU(d)}$ in this space.  The minimal time $T$ for which this is possible is known as the ``quantum speed limit" (QSL)~\cite{caneva2009optimal} . See Supplemental Material at ~\cite{notes1} for additional details of the quantum control protocol used here.
+
+One can achieve quantum controllability of the nuclear spin qudecimal  through magneto-optical interactions.  We combine magnetic spin resonance in the presence of an off-resonant laser field as depicted in Fig. 1.  The Hamiltonian acting on the nuclear spin in the $5s^2$ $^1S_0$ ground state takes the form $H=H_{\mathrm{mag}} +H_{\mathrm{LS}}$. Here $H_{\mathrm{mag}} = -\boldsymbol{\mu}\cdot \mathbf{B}(t)$ is the magnetic spin-resonance Hamiltonian, with $\boldsymbol{\mu} = g_I \mu_N \mathbf{I}$ the nuclear magnetic dipole vector operator and $\mathbf{B}(t) = B_\parallel \mathbf{e}_z + B_T \Re\left[(\mathbf{e}_x + i \mathbf{e}_y) \mathbf{e}^{-i\left(\omega_\text{rf} t +\phi(t)\right)}\right]$ the magnetic field consisting of a strong bias defining the quantization axis $\mathbf{e}_z$ and a transversely rotating rf-magnetic field with a time dependent phase $\phi(t)$. Taken alone, the $H_{\mathrm{mag}}$ generates only SU(2) rotations of nuclear spin.  To achieve full SU($d$) control we add a light-shift Hamiltonian due to the AC-Stark effect, $H_{LS}=-\alpha_{zz}(\omega_L) \left| E_0 \right|^2/4$ where $\alpha_{zz}(\omega_L)$ is the $zz$-component of atomic AC-polarizability tensor operator for a laser field at frequency $\omega_L$ linearly-polarized along the quantization axis, $\mathbf{E}_L(t) = \mathbf{e}_z \Re \left(E_0 e^{-i\omega_L t}\right)$. The form of $\alpha_{zz}$ depends on the atomic structure and the detuning of the laser from atomic resonance.  In particular, when the detuning is not large compared to the hyperfine splitting in the excited state, the polarizability has an irreducible rank-2 tensor component $\alpha_{zz} = \alpha^{(2)} I_z^2$ (there also a trivial scalar term proportion to the identity)~\cite{deutsch2010quantum}.  This quadratic spin twist together with the linear Larmor precession yields a set of control Hamiltonians $\{I_x, I_y, I_z^2\}$ sufficient to generate the Lie algebra SU($2I+1$) for an arbitrary spin $I$~\cite{Giorda2003}.  Such control was first demonstrated in the alkali atom cesium, for the hyperfine spin $F=3$ in the electronic ground state, in order to generate nonclassical spin states in the $d=7$ dimensional Hilbert space~\cite{Chaudhury2007}.  
+
+Importantly, the size of tensor polarizability $\alpha^{(2)}$ depends on the ratio of the excited state hyperfine splitting to the laser detuning~\cite{deutsch2010quantum} , achieving its maximum when these are of the same order.  Thus, to achieve high-fidelity control, one must tune sufficiently close to resonance, while avoiding photon scattering that leads to decoherence. Critically, in alkaline-earth atoms, the first excited $^3P_1$ states have long lifetimes and large hyperfine splittings. This leads to a very favorable figure of merit for optimal control, as measured by the ratio of the characteristic tensor light shift to the photon scattering rate  $\gamma_s$,  $\kappa \equiv \alpha^{(2)} \left| E_0 \right|^2 /4 \gamma_s$.  For example, in \textsuperscript{87}Sr, the hyperfine splitting between the $F=7/2$ and  $F=9/2$ levels in the singly-excited $5s5p \; ^3P_1$ state is $\omega_{\mathrm{HF}}/2\pi=1130$ MHz, while the spontaneous emission linewidth is $\Gamma/2\pi = 7.5$ kHz.   For a scattering rate averaged over all magnetic sublevels \cite{deutsch2010quantum}, we find that when we detune  about halfway between these resonances, we obtain the maximum figure of merit $\kappa =6.8 \times 10^3$ (see Fig. \ref{fig:level_diagram_strontium}).  In contrast, $\kappa =18.6$ for $F=3$ hyperfine spin in the cesium ground state when the laser is tuned halfway between the $F=3$ and $F=4$ hyperfine levels in the excited $6P_{1/2}$ D1-resonance.  This small figure of merit limited the fidelity to around $0.85$ for the arbitrary state preparation.  A factor of $364$ increase in the figure of merit for alkaline earths shows the potential power of this approach to yield high-fidelity quantum optimal control of the nuclear spin qudit.
+
+\begin{figure}
+
+%\includegraphics[width=0.5\textwidth, height=8cm]{new_level_2.eps}
+\includegraphics[width=0.5\textwidth, height=8cm]{animation.eps}
+\caption{  Schematic for magneto-optical control.  The qudecimal is encoded in the ten magnetic sublevels of the nuclear spin, $\ket{-9/2}\rightarrow \ket{9/2}$, in the $5s^2$ $^1S_0$ ground state. Their levels are shifted by a linear Zeeman effect due to a bias magnetic field and a quadratic tensor AC-Stark effect induced by an off-resonant laser beam, polarized along the quantization axis, and detuned $\Delta$ between the hyperfine levels of the $5s5p$ $^3P_1$ intercombination line.  Control of the qudecimal is then achieved with a phase modulated radio-frequency magnetic field, co-rotating at the bare Larmor precession frequency, whose amplitude causes Rabi rotations at frequency $\Omega_{\mathrm{rf}}$. The figure of merit for the control is the ratio of the AC-Stark shift to the photon scattering, $\kappa$ , shown in the inset (see text).}
+\label{fig:level_diagram_strontium}
+\end{figure}
+
+We consider control of the nuclear spin qudecimal with on-resonance rf fields  on resonance with the Zeeman splitting,  $\Delta E_0 = |g_I| \mu_N B_\parallel$, where $g_I \mu_N/h  = -184$~Hz/Gauss in \textsuperscript{87}Sr~\cite{olschewski1972messung}. In the rotating frame, the control Hamiltonian is
+\begin{equation}
+H(t)=\Omega_{\mathrm{rf}} \left( \cos[c(t) \pi]I_x+\sin[c(t) \pi] I_y\right)+\beta I_z^2,
+\label{eq:Control_Hamiltonian}
+\end{equation}
+%{\color{red} (Note from Ivan: I added the negative sign here because this is a nuclear spin and the interaction is $-\mu\cdot \mathbf{B}$.  It doesn't affect any of the calculations though we would have to search for the correct wave forms)} \mjm{(Note from Mike: I don't think this would even affect the waveforms because $\Omega_{\mathrm{rf}}$ is also negative because $g_{I}<0$. We should perhaps write $-g_I \mu_N/h  = 184$~Hz/Gauss above to emphasize this. Then we can just define $\Omega_\text{rf} = -g_I \mu_N B_T $, which is a positive number? ) } 
+where $\Omega_\text{rf} = -g_I \mu_N B_T $ is the  rf-Rabi frequency and $\beta = \alpha^{(2)} \left|E_0\right|^2/4$ is the strength of the tensor light shift (here and to follow $\hbar=1$). Note, for a rotating rf-field, there is no rotating wave approximation, and this Hamiltonian is valid even when $\Omega_\text{rf} \ge \omega_\text{rf}$. Here the  control waveform is solely the rf-phase $c(t) \equiv \phi(t)/\pi$.   It was proven in \cite{Merkel2008} that varying $c(t)$ is sufficient to achieve universal control the system. 
+
+We consider two classes of quantum control tasks, preparation of a target pure state $\ket{\psi_\text{tar}}$ and implementation of a unitary map $U_\text{tar}$.  Optimal control follows by maximizing the relevant fidelity,
+\begin{eqnarray}
+\mathcal{F}_{\psi}[\bm{c},T]&=&\left|\bra{\psi_{\text{tar}}}U[\bm{c},T]\ket{\psi_0}\right|^2,\\
+\mathcal{F}_U[\bm{c},T]&=&\left|\Tr\left(U^{\dagger}_{\text{tar}}U[\bm{c},T]\right)\right|^2/d^2.
+\label{eq:fidelity}
+\end{eqnarray} 
+This is achieved by discretizing the control waveform and then numerically maximizing the fidelity with gradient ascent.   In a series of works, the Rabitz group showed that the fidelity landscape is favorable for this purpose~\cite{
+rabitz2004quantum,Hsieh2008}.  We choose here a piecewise constant parameterization (as in ~\cite{Merkel2008}) and write the control function as a vector $\mathbf{c} = \{c(t_j) | j=1,\dots,n\}$ where $t=j\Delta t$ and $n=T/\Delta t$, parameterizing waveforms that are constant over the duration $\Delta t$.  A minimal choice of $n$ depends on the number of parameters necessary for the control task; for state-maps $n_\text{min} = 2d-2$ and for arbitrary SU($d$) maps $n_\text{min} = d^2-1$.  In practice, we choose $n$ to be a larger than $n_\text{min}$ which improves the fidelity landscape when $T$ is close the the QSL. To numerically optimize $\mathcal{F}$ we use a variation of the well-known GRAPE algorithm~\cite{khaneja2005optimal}. See supplemental material at \cite{notes1} for further details on the choice of parameterization and optimization.
+ 
+For a fixed value of $\Omega_\text{rf}$, the optimal choice of $\beta$ and total time $T$ are found empirically. Figures \ref{fig:decohrence_quantum_control}a(b) show the infidelity, $1-\mathcal{F}$, for state preparation (unitary maps), when averaged over 20 Haar random target vectors (10 random unitary maps).   As expected, when $T \rightarrow \infty$ the infidelity is essentially zero. The QSL is highly dependent on the value of $\beta$.
+%for smaller value of $\beta$ this goes as $1/\beta$ {\color{blue} and is optimal for $\beta$ on the order of $\Omega_{\mathrm{rf}}$, whereas increases again for larger values of $\beta$ (not shown in the figure.)} .  
+As expected, the optimal choice is $\beta \approx \Omega_\text{rf}$ as this provides the optimal mixing between Larmor precession and one-axis twisting.  The characteristics of state preparation and unitary maps are  similar in nature. The major difference between these two cases is that unitary mapping requires more time for the simple reason that unitary mapping has $d^2-1$ parameters compared to the $2d-2$ for the state preparation.  The quantum speed limit at $\beta=\Omega_{\mathrm{rf}}$ is $T_* \approx 1.5 \pi/\Omega_{\mathrm{rf}}$ for state preparation and $T_* \approx 8 \pi/\Omega_{\mathrm{rf}}$ for SU(10) unitary maps.
+ 
+In principle, one can achieve arbitrarily high fidelity with increasing $T$.  In practice $T$ is limited by the coherence time of the system.  Here, the coherence time is fundamentally limited by decoherence arising from photon scattering and optical pumping due to the off-resonant light-shift laser.  
+We model the effects of decoherence in the state preparation protocols using the Lindblad Master equation \cite{deutsch2010quantum},
+
+\begin{eqnarray}
+\frac{d\rho[\bm{c}, t]}{dt} &=&-i \comm{H_\text{eff}[\bm{c}]}{\rho[\bm{c},t]}+ \Gamma\sum_{i}W_q\rho[\bm{c},t] W_{q}^{\dagger}  \nonumber \\ 
+&\equiv& \mathcal{L}[\bm{c}]\left[ \rho[\bm{c},t]\right].
+\label{eq: evolution of the density matrix}
+\end{eqnarray}
+where the jump operators for optical pumping between magnetic sublevels describing absorption followed by emission of a $q$-polarized photon are $W_q$,
+\begin{equation}
+W_q=\sum_{F'}\frac{\Omega/2}{\Delta_{FF'}+i\Gamma/2}(\bm{e}_q^{*}.\bm{D}_{FF'})(\vec{\epsilon}_L.\bm{D}_{FF'}^{\dagger}).
+\end{equation}
+Here $\bm{D}_{FF'}^{\dagger}$ are the dimensionless dipole raising operators from ground state manifold $F=I$ to the excited state manifold $F'$, as defined in \cite{deutsch2010quantum}. $H_\text{eff}[\mathbf{c}] = H[\mathbf{c}] -i\Gamma \sum_q W_q^\dag W_q$/2 is the non-Hermitian control Hamiltonian, Eq. (\ref{eq: evolution of the density matrix}), now including absorption of the laser light.  
+
+ For gates, we define a $d^2 \times d^2$ superoperator matrix acting on the density matrix.  For the open quantum system, the superoperator describing the evolution of an arbitrary input state is the Completely Positive (CP)-map, $\mathcal{E}[\bm{c},T]=\mathcal{T}\left(\exp\{\int_0^T \mathcal{L}[\bm{c}(t')]\}dt'\right)$, where $\mathcal{L}$ is the Lindbladian superoperator of the master equation,  defined implicitly in Eq. (\ref{eq: evolution of the density matrix}).
+
+
+%determines the fidelity in the presence of optical pumping. \textcolor{blue}{Siva: In the case of unitary gates, it is shown by  Hofmann \cite{Hofmann2005} that a experimentally feasible way is to use $2d$  input states which consists of $2$ mutually unbiased basis. The relevant fidelity is given by the metric \cite{Reich2013,koch2016controlling,PhysRevA.89.012323},  
+%\begin{equation}
+%\mathcal{F}_U[\bm{c},T]=\frac{1}{2d}\sum_{i=1}^{2d}\Tr\{U_{tar}\rho_iU_{tar}^{\dagger}\mathca%l{J}[\bm{c},T][\rho_i]\}
+%\label{eq:decoherence_full_representation}
+%\end{equation}
+%where $U_{tar}$ is the target unitary matrix, and the superoperator Lindbald map in the presence of decoherence is,
+%\begin{equation}
+%\mathcal{J}[\bm{c},T]=\mathcal{T}\left(\exp\{-\int_0^T \mathcal{L}[\bm{c}(t')]\}dt'\right).
+%\label{eq:superoperator_decoherence}
+%\end{equation}
+%and in this case we choose the two unbiased bases to be eigenstates of the generalized X and %Z gate given as
+%\begin{equation}
+%\begin{aligned}
+%X\ket{k}=&\ket{k\oplus 1 }\\
+%Z\ket{k}=&\omega^k\ket{k},
+%\end{aligned}
+%\label{eq:Generalized X and Z gates}
+%\end{equation}
+%where $\oplus$ refers to addition modulo $d$ and  $\omega=\exp(2\pi i/d)$ which is the $d$th root of identity hence obtaining the $\mathcal{F}_U$ from pure states which is easily accessible in most of the experiments. \cite{Hofmann2005}}
+
+%\textcolor{blue}{$\mathcal{F}_U$ is related to the process fidelity $\mathcal{F}_{\text{proces}}$, which is of interest in fault tolerant quantum computation, as $2\mathcal{F}_U\leq \mathcal{F}_{\text{proces}}\leq \mathcal{F}_U $  .}  
+ 
+  We compared the output in the open quantum system dynamics given the  ideal control solution $\mathbf{c}$ found in closed-system optimization. The fidelities for state preparation and full SU(10) maps are, respectively,
+\begin{eqnarray}
+\mathcal{F}_\psi[\bm{c},T] &=& \Tr{\rho_{\psi_\text{tar}} \rho[\bm{c},T]}, \\
+\mathcal{F}_U[\bm{c},T] &=& \left|\Tr{\mathcal{E}_{U_\text{tar}}^{\dagger} \mathcal{E}[\bm{c},T]}\right|/d^2.
+\label{eq:effective Fidelity}
+\end{eqnarray}
+Here $\rho_{\psi_\text{tar}}=\ket{\psi_\text{tar}}\bra{\psi_\text{tar}}$ is the target state and $\rho[\bm{c},T]$ is the solution to the master equation.  $\mathcal{E}_{U_\text{tar}} = U_\text{tar}^{*}\otimes U_\text{tar}$ is the CP-map corresponding to the target unitary gate and $\mathcal{E}[\bm{c},T]$ is the CP-map with decoherence.   Eq. (\ref{eq:effective Fidelity}) is the ``process fidelity," a key quantity of interest in determining the thresholds for fault-tolerant quantum computation \cite{schulte2011}.
+
+Numerical results are given in Fig.~\ref{fig:decohrence_quantum_control} for both state preparation and unitary mapping. In contrast to closed-system control,  Fig.~\ref{fig:decohrence_quantum_control}c and Fig.~\ref{fig:decohrence_quantum_control}d show that there is an island  where the  infidelity is smallest. This reflects the tradeoff between coherent control and decoherence.  There is an optimal total time of evolution $T$ than larger than the QSL but not too large when compared to the optical pumping time.  In addition, the optimal choice of  $\beta$ is now smaller than we found for the closed quantum system, as increased tensor-light shift is accompanied by increased photon scattering. Including decoherence, for the case of state preparation, averaged over $20$ random states, we find the fidelity $\langle \mathcal{F}_\psi \rangle \approx 0.9997$.   Here the island of high fidelity is large, occurring for  $\beta< 1.2$. For the case of unitary mapping the island of lowest infidelity  occurs for  $\beta<1.2$ where the fidelity $\langle \mathcal{F}_U \rangle \approx 0.9970$ which is averaged over $10$ Haar random unitaries.  We emphasize that these qudecimal maps act on a 10-dimension Hilbert space.  Thus a fair comparison of the effective fidelity acting on qubits is $\langle \mathcal{F} \rangle_\text{qubit}= \langle \mathcal{F} \rangle_\text{qudecimal}^{0.3}$, since, in principle, one can encode more than 3 qubits in a qudecimal
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{contour_fig_new_21.eps}
+
+\caption{Fidelity of objectives found by optimal control as a function of the strength of AC-stark shift, $\beta$, and the total time $T$, in units of the rf-Rabi frequency $\Omega_\text{rf}$. Predictions based on closed-unitary evolution for state-maps (a) and  SU(10) unitary-maps (b) averaged over $120$ Haar-random target states and $10$ Haar-random target SU(10) matrices, respectively.  The control waveforms are piecewise constant, over times $\delta t = T/n$.  For state maps we choose $n=120$ time steps; the unitary maps we take $n=500$. The bottom layer gives the similar figures in the presence of decoherence using the master equation, Eq. (5): state fidelity(c), Eq. (6): and process fidelity (d).}
+\label{fig:decohrence_quantum_control}
+\end{figure}
+
+Coherence is also limited when there are inhomogenieties arising from uncertainties in the Hamiltonian parameters such as the laser intensity and detuning.  When the decoherence time is longer than than the inhomogeneous dephasing time, one can mitigate this with the numerical tools of robust control~\cite{PhysRevLett.82.2417, PhysRevA.58.2733, anderson2015accurate}.  We consider here an uncertainty in the tensor light shift arising from the thermal velocity of the atoms.  To perform robust control, we replace the control Hamiltonian by $H[\bm{c}] \rightarrow H'[\bm{c},\epsilon]=H[\bm{c}]+\epsilon I_z^2 $, where $\epsilon$ is the variation in $\beta$ around the fiducial value, and define a new objective function as the average fidelity, $\langle \mathcal{F}[\mathbf{c},T] \rangle =\int d\epsilon \; p(\epsilon)\mathcal{F}[\mathbf{c},T, \epsilon]$.  While in principle one can design inhomogeneous control with detailed knowledge of the probability distribution $p(\epsilon)$, in practice, when the standard deviation of the distribution $\delta$ is sufficiently narrow, it is sufficient to simultaneously optimize at two points\cite{anderson2015accurate},  and choose the objective function as 
+\begin{equation}
+\langle \mathcal{F}[\mathbf{c},T] \rangle = (\mathcal{F}[\mathbf{c},T, \epsilon=+\delta]+\mathcal{F}[\mathbf{c},T, \epsilon=-\delta])/2.
+\end{equation}
+
+
+The numerical results of robust control are shown in Fig.~\ref{fig:inhomogenity} for $\beta=0.4\Omega_{\mathrm{rf}}$ and an error of  $\delta = .005 \beta$. We see that robust control outperforms the bare waveforms, even in presence of decoherence, but one does not reach the fidelity without any inhomogeneity due to optical pumping occurring over the extended time of the control pulses. For the parameters chosen here, we find that for state preparation one could achieve a fidelity of $\langle \mathcal{F}_\psi \rangle \approx 0.9992$ in a time $T={4.5}\pi/\Omega_\text{rf}$, and for unitary mapping one achieved a fidelity  $\langle \mathcal{F}_U \rangle \approx 0.9923$  in a time $T={24}\pi/\Omega_\text{rf}$. 
+%For example, for a radio-frequency fields rotating at 20 kHz and Rabi frequency $\Omega_\text{rf}/2\pi =$ 1000 Hz, robust state control and unitary maps can be achieved on the order of 22.5 ms and 367.5 ms respectively.
+Other practical considerations such as the bandwidth needed for rapidly varying waveform may limit the speed of operation (see supplemental material \cite{notes1}).
+\begin{figure}
+
+\includegraphics[width=0.5\textwidth]{robust_new.eps}
+
+\caption{ Comparison of infidelity with and without decoherence and robust control to counteract dephasing due to inhomogeneities at the level of $.5\%$ of $\beta$ and $\beta=0.4\Omega_{\mathrm{rf}}$.  (a) state preparation (averaged over $20$ Haar-random target states),  (b) SU(10) mapping (averaged over $10$ Haar-random unitary matrices). Robust control can largely remove dephasing and achieve almost same the infidelity seen due solely to decoherence.}
+\label{fig:inhomogenity} 
+\end{figure}
+
+We have shown that in the presence of fundamental decoherence and small inhomogeneities, quantum optimal control allows for the realization of high-fidelity arbitrary state maps and SU(10) qudecimal gates acting on nuclear spin in the ground state of \textsuperscript{87}Sr. While we proposed one protocol that leverages the strong tensor light shift induced by a laser tuned near the $^3P_1$ hyperfine manifold, the richness of magneto-optical controls in\textsuperscript{87}Sr provides multiple possible approaches, \textit{e.g.}, by employing the tensor light shift when tuned near the $^3P_0$ clock state.  Quantum optimal control of nuclear spins should find a variety of applications in QIP, including metrological enhancement with qudits~\cite{Noris2012}, quantum simulation~\cite{Poggi2020,Blok2021}, and universal quantum computation~\cite{daley2011quantum}. For the latter additional components are necessary. One must enable readout of all 10 magnetic sublevels though appropriate shelving and fluorescence protocols~\cite{boyd2007nuclear}. Most importantly, we must study the implementation of entangling gates consistent with qudit logic.  Advances in Rydberg-state control for alkaline earth atoms show great promise in this direction~\cite{madjarov2020high}.  Finally, while we have studied here two extremes of the control tasks, state preparation and SU(10) maps, optimal control allows for arbitrary partial isometries to encode a $d'<10$ qudit in the qudecimal.  For example one can encode a qubit in the logical states $\ket{0}=\ket{m_I=9/2}$, $\ket{1}=\ket{m_I=-9/2}$ and potentially protect it from dephasing noise, analogous to a cat-code~\cite{Li2017} or other encodings of a qubit in a large spin that leverages the available interactions and dominant error channels~\cite{Gross2021}.  The flexibility of arbitrary control provides avenues to explore the best approach to encoding and error mitigation. 
+
+\begin{acknowledgements}
+
+This work was supported by the Laboratory Directed Research and Development program of Los Alamos National Laboratory under project numbers 20200015ER,  
+and the NSF Quantum Leap Challenge Institutes program, Award No. 2016244. The authors acknowledge fruitful discussions with Jun Ye.
+\end{acknowledgements}
+
+\bibliography{reference}
+\end{document}
